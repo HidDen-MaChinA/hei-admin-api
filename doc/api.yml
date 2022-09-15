@@ -932,103 +932,6 @@ paths:
           $ref: '#/components/responses/429'
         '500':
           $ref: '#/components/responses/500'
-  /rooms:
-    put:
-      tags:
-        - Places
-      summary: Create new room or update existing room
-      description: Update room when id are provided, create them otherwise.
-      operationId: createOrUpdateRoom
-      requestBody:
-        description: Room to update
-        required: true
-        content:
-          application/json:
-            schema:
-              type: array
-              items:
-                $ref: '#/components/schemas/Room'
-      responses:
-        '200':
-          description: The created or updated room
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Room'
-        '400':
-          $ref: '#/components/responses/400'
-        '403':
-          $ref: '#/components/responses/403'
-        '404':
-          $ref: '#/components/responses/404'
-        '429':
-          $ref: '#/components/responses/429'
-        '500':
-          $ref: '#/components/responses/500'
-    get:
-      tags:
-        - Places
-      summary: Get rooms
-      parameters:
-        - name: page
-          in: query
-          required: true
-          schema:
-            type: integer
-        - name: page_size
-          in: query
-          required: true
-          schema:
-            type: integer
-      operationId: getRoom
-      responses:
-        '200':
-          description: The identified room
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Room'
-        '400':
-          $ref: '#/components/responses/400'
-        '403':
-          $ref: '#/components/responses/403'
-        '404':
-          $ref: '#/components/responses/404'
-        '429':
-          $ref: '#/components/responses/429'
-        '500':
-          $ref: '#/components/responses/500'
-  /rooms/{id}:
-    get:
-      tags:
-        - Places
-      summary: Get room by identifier
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      operationId: getRoomById
-      responses:
-        '200':
-          description: The identified room
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Room'
-        '400':
-          $ref: '#/components/responses/400'
-        '403':
-          $ref: '#/components/responses/403'
-        '404':
-          $ref: '#/components/responses/404'
-        '429':
-          $ref: '#/components/responses/429'
-        '500':
-          $ref: '#/components/responses/500'
   /events:
     put:
       tags:
@@ -1513,25 +1416,21 @@ components:
         localisation:
           type: string
           example: "Ivandry(Antananarivo)"
-    Room:
-      type: object
-      properties:
-        id_room:
-          type: string
-        Place:
-          $ref: '#/components/schemas/Place'
     Event:
       type: object
       properties:
         id_event:
           type: string
-        description:
+        title:
           type: string
         type:
           type: string
-          example: exam
-        location:
-          $ref: '#/components/schemas/Room'
+          enum:
+            - COURSE
+            - EVALUATION
+            - OTHER
+        place:
+          $ref: '#/components/schemas/Place'
         event_start:
           type: string
           format: date-time
@@ -1540,6 +1439,8 @@ components:
           type: string
           format: date-time
           example: 2022-09-15 12:00
+        event_responsible:
+          $ref: '#/components/schemas/User'
         canceled:
           type: boolean
     EventParticipant:
@@ -1548,7 +1449,8 @@ components:
         id:
           type: string
         Event:
-          $ref: "#/components/schemas/Event"
+          allOf:
+            - $ref: "#/components/schemas/Event"
         participant:
           allOf:
             - $ref: '#/components/schemas/User'

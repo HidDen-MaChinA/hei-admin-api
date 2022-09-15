@@ -63,7 +63,8 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
             bearerFilter(new NegatedRequestMatcher(
                 new OrRequestMatcher(
                     new AntPathRequestMatcher("/ping"),
-                    new AntPathRequestMatcher("/**", OPTIONS.toString())
+                    new AntPathRequestMatcher("/**", OPTIONS.toString()),
+                    new AntPathRequestMatcher("/courses", OPTIONS.toString())
                 )
             )),
             AnonymousAuthenticationFilter.class)
@@ -73,6 +74,8 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
         .and()
         .authorizeRequests()
         .antMatchers("/ping").permitAll()
+        .antMatchers(GET, "/courses").permitAll()
+        .antMatchers(PUT, "/courses").hasRole(MANAGER.getRole())
         .antMatchers(OPTIONS, "/**").permitAll()
         .antMatchers("/whoami").authenticated()
         .antMatchers(GET, "/students").hasAnyRole(TEACHER.getRole(), MANAGER.getRole())
