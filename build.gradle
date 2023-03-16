@@ -35,6 +35,14 @@ repositories {
     mavenCentral()
 }
 
+sonarqube {
+    properties {
+        property "sonar.projectKey", "hei-admin-api"
+        property "sonar.organization", "hei-school"
+        property "sonar.host.url", "https://sonarcloud.io"
+    }
+}
+
 task generateJavaClient(type: org.openapitools.generator.gradle.plugin.tasks.GenerateTask) {
     generatorName = "java"
     inputSpec = "$rootDir/doc/api.yml".toString()
@@ -68,9 +76,9 @@ task generateTsClient(type: org.openapitools.generator.gradle.plugin.tasks.Gener
 }
 task publishJavaClientToMavenLocal(type: Exec, dependsOn: generateJavaClient) {
     if (org.apache.tools.ant.taskdefs.condition.Os.isFamily(org.apache.tools.ant.taskdefs.condition.Os.FAMILY_WINDOWS)){
-        commandLine './publish_gen_to_maven_local.bat'
+        commandLine './.shell/publish_gen_to_maven_local.bat'
     } else {
-        commandLine './publish_gen_to_maven_local.sh'
+        commandLine './.shell/publish_gen_to_maven_local.sh'
     }
 }
 tasks.compileJava.dependsOn publishJavaClientToMavenLocal
@@ -121,13 +129,20 @@ dependencies {
     implementation 'software.amazon.awssdk:eventbridge:2.17.109'
     implementation 'software.amazon.awssdk:sqs:2.17.109'
     implementation 'software.amazon.awssdk:cognitoidentityprovider:2.17.109'
+    implementation 'software.amazon.awssdk:ses:2.19.4'
 
     implementation 'io.sentry:sentry-spring-boot-starter:5.5.3'
     implementation 'io.sentry:sentry-logback:5.5.3'
 
     implementation 'org.springframework.boot:spring-boot-starter-validation'
+<<<<<<< HEAD
     implementation 'com.amazonaws:aws-java-sdk-s3:1.12.296'
     implementation 'com.amazonaws:aws-java-sdk-rekognition:1.12.296'
+=======
+    implementation 'org.thymeleaf:thymeleaf:3.1.1.RELEASE'
+    // A library that format number into words
+    implementation 'pl.allegro.finance:tradukisto:1.12.0'
+>>>>>>> 94f43688d5067d6abdc0c083491b69bb1700eee1
 
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
