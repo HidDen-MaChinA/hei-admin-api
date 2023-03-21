@@ -39,9 +39,9 @@ public class Course implements Serializable {
     private User main_teacher_id;
     @ManyToMany
     @JoinTable(
-            name= "linked_or_unliked",
-            joinColumns=@JoinColumn(name = "User_id"),
-            inverseJoinColumns=@JoinColumn(name = "course_id")
+        name= "linked_or_unliked",
+        JoinColumn=@JoinColumn(name = "User_id"),
+        inverseJoinColumn=@JoinColumn(name = "course_id")
     )
     private List<User> userStatus;
 }

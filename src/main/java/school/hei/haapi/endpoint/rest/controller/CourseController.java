@@ -12,10 +12,12 @@ import school.hei.haapi.endpoint.rest.model.Course;
 import school.hei.haapi.model.User;
 import school.hei.haapi.service.CourseService;
 import school.hei.haapi.service.UserService;
-
 import java.util.List;
-
 import static java.util.stream.Collectors.toUnmodifiableList;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @AllArgsConstructor
@@ -59,5 +61,10 @@ public class CourseController {
                 .stream()
                 .map(mapper::toRest)
                 .collect(toUnmodifiableList());
+    @PostMapping("/courses")
+    public List<Course> updateCourse(@PathVariable int id, @RequestBody List<Course> coursesourse){
+        return service.updateCourse(id, coursesourse).stream()
+                .map(mapper::ToDomain)
+                .collect(Collectors.toUnmodifiableList());
     }
 }

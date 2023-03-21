@@ -1,5 +1,6 @@
 package school.hei.haapi.endpoint.rest.mapper;
 
+
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import school.hei.haapi.endpoint.rest.model.Course;
@@ -7,8 +8,17 @@ import school.hei.haapi.endpoint.rest.model.Course;
 @Component
 @AllArgsConstructor
 public class CourseMapper {
+    public Course ToDomain(Course course){
+        Course newCourse = new Course();
+        newCourse.setId(course.getId());
+        newCourse.setCode(course.getCode());
+        newCourse.setName(course.getName());
+        newCourse.setCredits(course.getCredits());
+        newCourse.setMain_teacher(course.getMain_teacher());
 
-    public Course toRest(school.hei.haapi.model.Course domainCourse) {
+        return newCourse;
+    }
+     public Course toRest(school.hei.haapi.model.Course domainCourse) {
         return new Course()
                 .id(domainCourse.getId())
                 .ref(domainCourse.getRef())
@@ -26,4 +36,5 @@ public class CourseMapper {
                 .totalHours(restCourse.getTotalHours())
                 .build();
     }
+
 }
