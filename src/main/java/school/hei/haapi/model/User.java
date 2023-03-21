@@ -3,13 +3,17 @@ package school.hei.haapi.model;
 import java.io.Serializable;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Objects;
+
+import javax.management.RuntimeErrorException;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -23,6 +27,7 @@ import org.hibernate.Hibernate;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 import school.hei.haapi.repository.types.PostgresEnumType;
+import school.hei.haapi.model.Course;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
@@ -103,5 +108,15 @@ public class User implements Serializable {
 
   public enum Role {
     STUDENT, TEACHER, MANAGER
+  }
+  @ManyToMany(mappedBy = "userStatus")
+  private List<Course> courseStatus;
+
+  public void SetCourseStatus(List<Course> param){
+    if(this.role.equals(Role.STUDENT)){
+      this.courseStatus=param;
+    } else {
+      throw new RuntimeErrorException(new Error("teacher cannot have course status"));
+    }
   }
 }
