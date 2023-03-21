@@ -1,52 +1,47 @@
 package school.hei.haapi.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
+import org.hibernate.annotations.TypeDef;
+import school.hei.haapi.repository.types.PostgresEnumType;
 
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.validation.constraints.Min;
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
+import java.util.List;
+
+import static javax.persistence.GenerationType.IDENTITY;
 
 @Entity
 @Table(name = "\"course\"")
+@TypeDef(name = "pgsql_enum", typeClass = PostgresEnumType.class)
 @Getter
 @Setter
 @ToString
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode
 public class Course implements Serializable {
-
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = IDENTITY)
     private String id;
 
-    @Column(nullable = false, unique = true)
-    @NotBlank(message = "Reference cannot be blank.")
+    @NotBlank(message = "Code is mandatory")
+    private String code;
+
+    @NotBlank(message = "Name is mandatory")
     private String name;
 
-    @Column(nullable = false)
-    @NotBlank(message = "Reference cannot be blank.")
-    private String ref;
-
-    @Column(nullable = false)
-    @NotBlank(message = "Credits cannot be blank.")
-    @Min(message = "Credits cannot be negative.", value = 1)
+    @NotBlank(message = "Credits name is mandatory")
     private int credits;
-
-    @Column(nullable = false)
-    private int totalHours;
+    private int total_hours;
+    @ManyToOne
+    @JoinColumn(name = "main_teacher_id")
+    private User main_teacher_id;
+    @ManyToMany
+    @JoinTable(
+            name= "linked_or_unliked",
+            joinColumns=@JoinColumn(name = "User_id"),
+            inverseJoinColumns=@JoinColumn(name = "course_id")
+    )
+    private List<User> userStatus;
 }
